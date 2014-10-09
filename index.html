@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+<!-- Kulvinder Lotay
+	 Introduction To Programming
+	 Project 3 -->
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="author" 	content="Kulvinder Lotay" />
+		<title>Jail Break v0.4</title>
+		<!-- Separated created styles from styles on existing elements -->
+		<style>
+			.header {font-weight: bold; font-family: "Calibri", sans-serif;)
+			.footer {padding-left: 25px; font-style: italic;}
+		</style>
+		<style>
+			h1 {text-align: center;}
+			body {background-color: #e8e8e8; font-family: "Calibri", sans-serif;}
+			p {padding-left: 25px; font-style: italic;}
+			hr {width: 100%;}
+			table {border: 5px solid black; margin-left: auto; margin-right: auto;}
+			th {border: 1px solid black;}
+			th, td{padding: 30px;}
+		</style>
+	</head>
+	<body onload="initialize_page()">
+		<h1 class="header" style="font-family: 'Impact';">Jail Break</h1>
+		<!-- <h2 class="header" style="color: #a00000; font-weight: normal;">Introduction To Programming - CMPT 120L-111</h2> -->
+		<!-- Overriding the color and font-weight attribute of the header class for h2 -->
+		<p>
+			Contact me at
+			<a href="mailto:kulvinder.lotay1@marist.edu?Subject=Go%20Gunners">kulvinder.lotay1@marist.edu</a> 
+			if you have any problems
+		</p>
+		<hr />
+		<br />
+		<div style="text-align: center;">
+		<!-- Some objects are read only as they are only needed to display information, and should not be editable by the user/player -->
+			Current Location:
+			<input readonly
+				   type="text"
+				   id="txtLocation"
+				   name="txtLocation"
+				   value="Prison Cell">
+			<br />
+			<textarea readonly rows="15" cols="80" id="ta_Main"></textarea>
+			<br />
+			<br />
+			<input type="button"
+				   id="btn0"
+				   value="North"
+				   onclick="btnNorth_Click()">
+			<br />
+			<input type="button"
+				   id="btn3"
+				   value="West"
+				   onclick="btnWest_Click()">
+			<input type="button"
+				   id="btn1"
+				   value="East"
+				   onclick="btnEast_Click()">
+			<br />
+			<input type="button"
+				   id="btn2"
+				   value="South"
+				   onclick="btnSouth_Click()">
+			<br />
+			<br />
+			Command:
+			<input type="text"
+				   id="txtCommand"
+				   name="txtCommand"
+				   list="txtCommand_list"
+				   onkeydown="enterKey_check(event)">
+			<datalist id="txtCommand_list"></datalist>
+			<input type="button"
+				   id="btn_Enter"
+				   value="Enter"
+				   onclick="btnEnter_click()">
+			<br />
+			Points:
+			<input readonly
+				   type="text"
+				   id="txtPoints"
+				   value=0>
+			<br />
+			<br />
+			Map:
+			<br />
+			<br />
+			<table>
+				<tr>
+					<td></td>
+					<th id="loc7">Warden's Office</th>
+					<td></td>
+				</tr>
+				<tr>
+					<th id="loc4">Infirmary</th>
+					<th id="loc5">Visiting Room</th>
+					<th id="loc6">Gymnasium</th>
+				</tr>
+				<tr>
+					<th id="loc1">Dining Room</th>
+					<th id="loc2">Multi-purpose Room</th>
+					<th id="loc3">Courtyard</th>
+				</tr>
+				<tr>
+					<td></td>
+					<th id="loc0" style="background: #E80000;">Prison Cell</th>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<br />
+		<br />
+		<p>
+			<a href="http://validator.w3.org/#validate_by_input">Validate as HTML5</a>
+		</p>
+	</body>
+	<script type="text/javascript" src="myscript.js"></script>
+</html>
