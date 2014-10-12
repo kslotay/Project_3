@@ -54,7 +54,7 @@
 					   "",
 					   "",
 					   "The gymnasium is dark and empty. There are some dead bodies on the basketball court.",
-					   ""];
+					   "There is a safe inside, but you cannot open it."];
 				 
 //Global points variable
 var points = 0;
@@ -167,7 +167,7 @@ var cmd = ["n", "e", "s", "w", "look", "take", "unlock", "help", "climb", "eat",
 				btn_disable("btn0","btn3");
 				break;
 			case 5:
-				if ((loc_visited[current_loc] > 1) && (loc_locked[7] = true)) {
+				if ((loc_visited[current_loc] > 1) && (loc_locked[7] === true)) {
 					btn_enable("btn1","btn2","btn3");
 					btn_disable("btn0");
 				}
@@ -272,6 +272,10 @@ function loc_desc_used() {
 			case 6:
 				loc_desc2[locx] = loc_desc_alt[locx];
 				break;
+			case 7:
+				loc_desc0[locx] = loc_desc_alt[locx];
+				loc_desc1[locx] = loc_desc_alt[locx];
+				break;
 		}
 	}
 	
@@ -303,7 +307,7 @@ function initialize_page() {
 		var msg_box = document.getElementById("ta_Main");
 		var navigationError_messages = ["You cannot go that way!",
 										"Navigation Error!"];
-		if (err === 0) {
+		if (err != undefined) {
 			msg_box.value = navigationError_messages[err] + "\n\n" + msg_box.value;
 		}
 		else {
@@ -325,11 +329,11 @@ function initialize_page() {
 									  "There is nothing to listen to!",
 									  "Gameplay Error!"];
 		
-		if (err === undefined) {
-			msg_box.value = gameplayError_messages[(gameplayError_messages.length - 1)] + "\n\n" + msg_box.value;
+		if (err != undefined) {
+			msg_box.value = gameplayError_messages[err] + "\n\n" + msg_box.value;
 		}
 		else {
-			msg_box.value = gameplayError_messages[err] + "\n\n" + msg_box.value;
+			msg_box.value = gameplayError_messages[(gameplayError_messages.length - 1)] + "\n\n" + msg_box.value;
 		}
 	}
 
@@ -354,8 +358,8 @@ function initialize_page() {
 			case 1:
 				if (loc_desc_used()[current_loc] != loc_desc_alt[current_loc]) {
 					update_Display(3);
-					inventory_q[0]++;
 					edit_desc(current_loc);
+					inventory_q[0]++;
 					break;
 				}
 			case 6:
@@ -389,8 +393,12 @@ function initialize_page() {
 					break;
 				}
 			case 5:
-				//if the location is visiting room, and the player has lock pick(s) in inventory, unlocks door to Warden's office
+				//If location is visiting room, and the player has lock pick(s) in inventory, unlocks door to Warden's office
 				if ((loc_visited[current_loc] > 1) && (inventory_q[1] != 0)) {
+					loc_locked[7] = false;
+					if (loc_visited[7] < 2) {
+						edit_desc(7);
+					}
 					update_Display(5);
 					break;
 				}
@@ -431,7 +439,7 @@ function initialize_page() {
 	function cmd_Inventory_check() {
 		var inv_list = "";
 		var msg_box = document.getElementById("ta_Main");
-		for (i = 0; i < 2; i++) {
+		for (i = 0; i < inventory.length; i++) {
 			inv_list = capitaliseFirstLetter(inventory[i]).toString() + " = " + inventory_q[i].toString() + "\n" + inv_list;
 		}
 		msg_box.value = "INVENTORY: \n" + inv_list + "\n\n" + msg_box.value;
@@ -617,8 +625,22 @@ function param_change() {
 	function btnEnter_click() {
 		var msg_box = document.getElementById("ta_Main");
 		var txtCommand = document.getElementById("txtCommand");
-		var usrCommand = (txtCommand.value);
-		var cmd_number = cmd.indexOf(usrCommand.toLowerCase());
+		var usrCommand = (txtCommand.value.toLowerCase());
+		
+		if (usrCommand === "north") {
+			usrCommand = "n";
+		}
+		else if (usrCommand === "east") {
+			usrCommand = "e";
+		}
+		else if (usrCommand === "south") {
+			usrCommand = "s";
+		}
+		else if (usrCommand === "west") {
+			usrCommand = "w";
+		}
+		
+		var cmd_number = cmd.indexOf(usrCommand);
 		switch(cmd_number) {
 			case 0:
 				btnNorth_Click();
