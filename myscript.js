@@ -201,29 +201,63 @@ function loc_desc_used() {
 }
 
 //LOCATION/MAP/POINTS/TEXTAREA UPDATING:
-	//Updates textarea
-	function update_Display(num) {
+	//Update textarea
+	function update_Display(num, type) {
 		var msg_box = document.getElementById("ta_Main");
-		var message = ["You move to the ",
-					   "Welcome to Jail Break!\n\nFor every time you visit a new location, you will receive 5 points. You must escape the prison to win the game!\n\nYou are currently in the prison cell.",
-					   "You take the lock pick.",
-					   "You have taken the food!",
-					   "You have unlocked the cell door!",
-					   "Warden's office unlocked!",
-					   "You have eaten food from your inventory!",
-					   "You eat the food from the dining tables.",
-					   "'ALERT! ALERT! The fence in the courtyard has been breached!'",
-					   "Congratulations! You have escaped!"];
-		
-		if (num === 0) {
-			msg_box.value = message[num] + loc[current_loc] + "\n\n" + loc_desc_used()[current_loc] + "\n\n" + msg_box.value;
+		var message = [];
+		switch (type) {
+			case 0:
+				message = ["You move to the ",
+						   "Welcome to Jail Break!\n\nFor every time you visit a new location, you will receive 5 points. You must escape the prison to win the game!\n\nYou are currently in the prison cell.",
+					       "You take the lock pick.",
+					       "You have taken the food!",
+					       "You have unlocked the cell door!",
+					       "Warden's office unlocked!",
+					       "You have eaten food from your inventory!",
+					       "You eat the food from the dining tables.",
+					       "'ALERT! ALERT! The fence in the courtyard has been breached!'",
+					       "Congratulations! You have escaped!"];
+				break;
+			case 1:
+				message = ["You cannot go that way!",
+						   "Navigation Error!"];
+				break;
+			case 2:
+				message = ["There is nothing to take!",
+ 					       "There is nothing to unlock!",
+  					       "There is nothing to climb!",
+					       "You cannot unlock the Warden's office. You do not have a lock pick!",
+					       "There is no food available to eat!",
+					       "Please enter a valid command! (Type help for details)",
+					       "You cannot unlock the cell door. You do not have a lock pick!",
+					       "The Warden's office is locked!",
+					       "There is nothing to listen to!",
+					       "Gameplay Error!"];
+				break;
 		}
-		else if (num === 9) {
-			msg_box.value = message[num];
+		if (type === 0) {
+			if (num === 0) {
+				msg_box.value = message[num] + loc[current_loc] + "\n\n" + loc_desc_used()[current_loc] + "\n\n" + msg_box.value;
+			}
+			else if (num === 9) {
+				msg_box.value = message[num];
+			}
+			else {
+				msg_box.value = message[num] + "\n\n" + msg_box.value;
+			}
 		}
-		else {
-			msg_box.value = message[num] + "\n\n" + msg_box.value;
+		else if ((type === 1) || (type === 2)) {
+			if (num != undefined) {
+				msg_box.value = message[num] + "\n\n" + msg_box.value;
+			}
+			else {
+				msg_box.value = message[(message.length - 1)] + "\n\n" + msg_box.value;
+			}	
 		}
+	}
+	
+	function update_display_msg(msg) {
+		update_Display(msg, 0);
 	}
 
 	//Updates location value in location box
@@ -288,7 +322,7 @@ function player_Win() {
 	var txtCommand = document.getElementById("txtCommand");
 	var btn_Enter = document.getElementById("btn_Enter");
 	btn_disable("all");
-	update_Display(9);
+	update_display_msg(9);
 	txtCommand.disabled = true;
 	btn_Enter.disabled = true;
 }
@@ -298,43 +332,18 @@ function initialize_page() {
 	populate_CmdList();
 	current_loc = 0;
 	btn_set();
-	update_Display(1);
+	update_display_msg(1);
 }
 
 //ERROR HANDLING
 	//Navigation error handler
 	function navigationError(err) {
-		var msg_box = document.getElementById("ta_Main");
-		var navigationError_messages = ["You cannot go that way!",
-										"Navigation Error!"];
-		if (err != undefined) {
-			msg_box.value = navigationError_messages[err] + "\n\n" + msg_box.value;
-		}
-		else {
-			msg_box.value = navigationError_messages[(navigationError_messages.length - 1)] + "\n\n" + msg_box.value;
-		}
+		update_Display(err, 1);
 	}
 
 	//Gameplay error handler
 	function gameplayError(err) {
-		var msg_box = document.getElementById("ta_Main");
-		var gameplayError_messages = ["There is nothing to take!",
-									  "There is nothing to unlock!",
-									  "There is nothing to climb!",
-									  "You cannot unlock the Warden's office. You do not have a lock pick!",
-									  "There is no food available to eat!",
-									  "Please enter a valid command! (Type help for details)",
-									  "You cannot unlock the cell door. You do not have a lock pick!",
-									  "The Warden's office is locked!",
-									  "There is nothing to listen to!",
-									  "Gameplay Error!"];
-		
-		if (err != undefined) {
-			msg_box.value = gameplayError_messages[err] + "\n\n" + msg_box.value;
-		}
-		else {
-			msg_box.value = gameplayError_messages[(gameplayError_messages.length - 1)] + "\n\n" + msg_box.value;
-		}
+		update_Display(err, 2);
 	}
 
 //COMMAND FUNCTIONS:
@@ -350,21 +359,21 @@ function initialize_page() {
 		switch (current_loc) {
 			case 0:
 				if (loc_visited[current_loc] === 0) {
-					update_Display(2);
+					update_display_msg(2);
 					edit_desc(current_loc);
 					inventory_q[1]++;
 					break;
 				}
 			case 1:
 				if (loc_desc_used()[current_loc] != loc_desc_alt[current_loc]) {
-					update_Display(3);
+					update_display_msg(3);
 					edit_desc(current_loc);
 					inventory_q[0]++;
 					break;
 				}
 			case 6:
 				if ((loc_visited[current_loc] > 1) && (loc_desc_used()[current_loc] != loc_desc_alt[current_loc])) {
-					update_Display(2);
+					update_display_msg(2);
 					edit_desc(current_loc);
 					inventory_q[1]++;
 					break;
@@ -381,7 +390,7 @@ function initialize_page() {
 			case 0:
 				//If location is the prison cell, and the player has lock pick(s) in inventory, unlock door
 				if ((loc_locked[current_loc] === true) && (inventory_q[1] != 0)) {
-					update_Display(4);
+					update_display_msg(4);
 					loc_locked[current_loc] = false;
 					loc_visited[current_loc]++;
 					inventory_q[1]--;
@@ -399,7 +408,7 @@ function initialize_page() {
 					if (loc_visited[7] < 2) {
 						edit_desc(7);
 					}
-					update_Display(5);
+					update_display_msg(5);
 					break;
 				}
 				else if ((loc_visited[current_loc] > 1) && (inventory_q[1] === 0)) {
@@ -422,12 +431,12 @@ function initialize_page() {
 		var msg_box = document.getElementById("ta_Main");
 		//If inventory already contains food, eat from there
 		if (inventory_q[0] != 0) {
-			update_Display(6);
+			update_display_msg(6);
 			inventory_q[0]--;
 		}
 		//Otherwise if player is currently in the dining room and does not have any food in inventory, eat directly
 		else if ((current_loc === 1) && (loc_desc_used()[current_loc] != loc_desc_alt[current_loc]) && (inventory_q[0] == 0)) {
-			update_Display(7);
+			update_display_msg(7);
 			edit_desc(current_loc);
 		}
 		else {
@@ -466,7 +475,7 @@ function initialize_page() {
 	//Executed on listen command
 	function cmd_Listen() {
 		if ((loc_visited[current_loc] > 1) && (current_loc === 4)) {
-			update_Display(8);
+			update_display_msg(8);
 			breach_c_Fence();
 		}
 		else {
@@ -480,7 +489,7 @@ function param_change() {
 	update_Map(1);
 	update_Points();
 	loc_visited[current_loc]++;
-	update_Display(0);
+	update_display_msg(0);
 	btn_set();
 	if ((loc_visited[current_loc] > 1) && (current_loc === 5)) {
 		loc_locked[7] = true;
